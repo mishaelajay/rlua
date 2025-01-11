@@ -14,7 +14,7 @@ describe Lua::State do
     it 'creates a table in Ruby and pass it to Lua' do
       subject.ruby = {
         'meaning_of_life' => 42,
-        'zaphod' => lambda { |table| p "Meaning of life: #{table.meaning_of_life}" }
+        'zaphod' => proc { |table| p "Meaning of life: #{table.meaning_of_life}" }
       }
 
       expect { subject.__eval "ruby:zaphod()" }.to output("\"Meaning of life: 42\"\n").to_stdout
@@ -80,7 +80,7 @@ describe Lua::State do
       end
 
       it 'converts Proc to function' do
-        subject.value = ->(x){ x }
+        subject.value = Proc.new { |x| x }
         subject.__eval 't = type(value)'
         expect(subject.t).to eq("function")
       end
